@@ -1,6 +1,6 @@
 {
-	"short_name": "QR Code Generator",
-	"name": "QR Code Generator",
+	"short_name": "QR Code Generator using React js",
+	"name": "QR Code Generator using React js",
 	"icons": [
 		{
 			"src": "favicon.ico",
