@@ -67,7 +67,7 @@ export default function FormQrCustom({ qrRef, url, qrColor, qrBgColor, noImg, se
 
 			<button type="submit">
 				<span>Download now</span>
-				<img src="./logo-apple-icon192.png" alt="Travolgi" />
+				<img src="./react-qrcode-generator/logo-apple-icon192.png" alt="Travolgi" />
 			</button>
 			
 			{downloaded &&
