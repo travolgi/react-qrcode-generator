@@ -1,0 +1,409 @@
+/*
+ *	Project: Qr Code Generator using React js
+ *	Version: 1.0.0
+ *	Author: Travolgi
+ *	Date: 30/07/2022
+ */
+
+/** Reset **/
+* {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	list-style: none;
+	outline: none;
+	box-sizing: border-box;
+}
+:root {
+	/**  Sun  **/
+	--sky-bg: #96dcee;
+	--sun-bg: #fffaa8;
+	/**  Moon  **/
+	--sky-night-bg: #6b7abb;
+	--moon-dots: #e8e8ea;
+
+	/**  Elements  **/
+	--white: hsl(0, 0%, 100%);
+	--bg: hsl(212, 45%, 89%);
+	--blue: hsl(220, 15%, 55%);
+	--dark-blue: hsl(218, 44%, 22%);
+	--rgba-darkblue: rgba(31, 50, 81, .35);
+	--red: #ba0035;
+	
+	--shadow: 0 .3rem 1rem var(--rgba-darkblue);
+	--cubic-bezier: .8s cubic-bezier(.06, .8, .1, 1);
+}
+:root body.dark {
+	--white: #002625;
+	--bg: #12121a;
+	--blue: #fff;
+	--dark-blue: #00beb7;
+}
+
+::-webkit-scrollbar { width: .7rem; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { border-radius: 1rem; }
+html {
+	scrollbar-width: thin;
+	scroll-behavior: smooth;
+	background-color: var(--bg);
+}
+
+body {
+	display: grid;
+	place-items: center;
+	min-height: 100vh;
+	padding: 1rem;
+	font-family: 'Sulphur Point', sans-serif;
+	font-size: 1.2rem;
+	background: var(--bg);
+	color: var(--blue);
+	transition: var(--cubic-bezier);
+}
+header {
+	display: grid;
+	place-items: center;
+	place-content: center;
+	grid-template-columns: 4rem max-content 4rem;
+	gap: 1rem;
+	padding-inline: 1rem;
+	padding-bottom: 5rem;
+}
+main {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 5rem;
+}
+
+h1 {
+	margin-bottom: 1.5rem;
+}
+h1,
+h2,
+a {
+	color: var(--dark-blue);
+}
+.relative {
+	position: relative;
+}
+.word-wrap {
+	word-wrap: anywhere;
+}
+.sr-only {
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0,0,0,0);
+	white-space: nowrap;
+}
+
+
+/**  Toggle Theme  **/
+.toggle-checkbox {
+	display: none !important;
+}
+.toggle-checkbox:checked + .toggle-label {
+	background: var(--sky-night-bg);
+}
+.toggle-checkbox:checked + .toggle-label .toggle-label-bg {
+	left: 3rem;
+	width: .6rem;
+	height: .5rem;
+}
+.toggle-checkbox:checked + .toggle-label .toggle-label-bg:before,
+.toggle-checkbox:checked + .toggle-label .toggle-label-bg:after {
+	width: .5rem;
+	height: .5rem;
+	top: -1rem;
+}
+.toggle-checkbox:checked + .toggle-label .toggle-label-bg:after {
+	left: -1.5rem;
+	top: 1rem;
+}
+.toggle-checkbox:checked + .toggle-label:before {
+	background: var(--white);
+	animation-name: switch;
+	animation-duration: .4s;
+	animation-fill-mode: forwards;
+}
+.toggle-checkbox:checked + .toggle-label:after {
+	transition-delay: .4s;
+	opacity: 1;
+}
+.toggle-label {
+	position: relative;
+	display: flex;
+	width: 8rem;
+	height: 3.8rem;
+	border-radius: 2rem;
+	background: var(--sky-bg);
+	transition: all var(--cubic-bezier);
+}
+.toggle-label-bg {
+	position: relative;
+	left: 5.5rem;
+	top: 1.8rem;
+	width: .5rem;
+	height: .3rem;
+	border-radius: .5rem;
+	background: var(--white);
+	transition: all var(--cubic-bezier);
+}
+.toggle-label-bg:before,
+.toggle-label-bg:after {
+	content: '';
+	position: absolute;
+	top: .55rem;
+	left: -.4rem;
+	width: 2rem;
+	height: .3rem;
+	border-radius: .5rem;
+	background: var(--white);
+	transition: all var(--cubic-bezier);
+}
+.toggle-label-bg:after {
+	top: -.6rem;
+	left: -1.5rem;
+}
+.toggle-label:before {
+	content: '';
+	position: absolute;
+	width: 3rem;
+	height: 3rem;
+	top: .4rem;
+	left: .3rem;
+	border-radius: 3rem;
+	background: var(--sun-bg);
+	animation-name: switchReverse;
+	animation-duration: .4s;
+	animation-fill-mode: forwards;
+	transition: all var(--cubic-bezier);
+}
+.toggle-label:after {
+	content: '';
+	position: absolute;
+	right: 2rem;
+	top: .4rem;
+	width: .5rem;
+	height: .5rem;
+	border-radius: 50%;
+	opacity: 0;
+	background: transparent;
+	box-shadow: var(--moon-dots) .5rem .5rem 0 .08rem, var(--moon-dots) -.5rem 1.2rem 0 -.08rem;
+	transition-delay: 0;
+	transition: all var(--cubic-bezier);
+}
+
+
+/**  Form & Input  **/
+form {
+	width: 100%;
+	position: relative;
+}
+input,
+button {
+	display: block;
+	width: 100%;
+	padding: 1rem;
+	border-radius: .8rem;
+	margin-bottom: 1.5rem;
+	box-shadow: var(--shadow);
+	transition: var(--cubic-bezier);
+}
+.clear-btn {
+	position: absolute;
+	top: .8rem;
+	right: 0;
+	width: max-content;
+	font-size: 1.8rem;
+	background: transparent;
+	box-shadow: none;
+	z-index: 95;
+}
+input[type="file"] {
+	background-color: var(--white);
+	padding-block: .5rem;
+}
+input[type="checkbox"] {
+	width: max-content;
+	display: inline-block;
+	margin-right: 1rem;
+}
+input[type="button"] {
+	display: inline;
+	padding: .3rem;
+	width: 4rem;
+	height: 2rem;
+	margin-right: 1rem;
+}
+label {
+	display: inline;
+}
+.error-msg {
+	color: var(--red);
+	font-weight: 700;
+	padding-left: 1rem;
+}
+.success-msg {
+	color: #008000;
+	font-weight: 700;
+	padding-top: 1.5rem;
+	text-align: center;
+}
+button[type="submit"] {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	width: 100%;
+	margin-block: 2.5rem 0;
+	font-size: 1.25rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--white);
+	background-color: var(--dark-blue);
+}
+button[type="submit"] > img {
+	max-width: 1.5rem;
+	animation: pulse infinite 1s alternate;
+}
+button:hover,
+input:focus,
+input:active {
+	opacity: .85;
+	transform: scale(1.1);
+}
+.sketch-picker {
+	position: absolute !important;
+	z-index: 9;
+}
+
+
+/**  Card  **/
+.card {
+	max-width: 22rem;
+	padding: 1.2rem;
+	border-radius: 1.5rem;
+	text-align: center;
+	background-color: var(--white);
+	box-shadow: var(--shadow);
+}
+.card > * {
+	margin-bottom: 1.5rem;
+}
+.card .qr-box {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 20rem;
+	border-radius: .8rem;
+	overflow: hidden;
+}
+.card .qr-box::before,
+.card .qr-box::after {
+	content: '';
+	position: absolute;
+	top: -12rem;
+	right: 6rem;
+	width: 22rem;
+	height: 22rem;
+	border-radius: 100%;
+	background-color: rgba(255,255,255,.08);
+	z-index: 99;
+}
+.card .qr-box::after {
+	top: 14rem;
+	right: -8rem;
+	width: 20rem;
+}
+.card .qr-box canvas {
+	border-radius: .8rem;
+	transition: var(--cubic-bezier);
+	z-index: 98;
+}
+
+
+/**  Responsive  **/
+@media (max-width: 50em) {
+	header {
+		padding-top: 3rem;
+	}
+	main {
+		padding-bottom: 7rem;
+		grid-template-columns: 1fr;
+	}
+}
+
+
+/**  Animations  **/
+@keyframes pulse {
+	from { transform: scale(0.8); }
+	to { transform: scale(1.2); }
+}
+
+@keyframes switch {
+	0% {
+	  left: .5rem;
+	}
+	60% {
+	  left: .5rem;
+	  width: 5rem;
+	}
+	100% {
+	  left: 4.5rem;
+	  width: 3rem;
+	}
+}
+@keyframes switchReverse {
+	0% {
+	  left: 2rem;
+	  width: 3rem;
+	}
+	60% {
+	  left: 1rem;
+	  width: 5rem;
+	}
+	100% {
+	  left: .5rem;
+	}
+}
+
+
+/**  Attribution  **/
+.attribution {
+	display: block;
+	position: fixed;
+	right: 1rem;
+	bottom: 1rem;
+	width: 3.6rem;
+	height: 3.6rem;
+	border-radius:100%;
+	background-image: url('https://avatars.githubusercontent.com/u/105203357');
+	background-size: 100%;
+	z-index: 99;
+}
+.attribution > p {
+	position: fixed;
+	bottom: 4rem;
+	right: 4.8rem;
+	width: max-content;
+	padding: .3rem 1rem;
+	border-radius: 1rem 1rem 0;
+	font-size: 1rem;
+	background-color: var(--white);
+	box-shadow: var(--shadow);
+	z-index: 100;
+	transform: rotateY(90deg);
+	transform-origin: right;
+	transition: var(--cubic-bezier);
+}
+.attribution:hover > p {
+	transform: rotateY(0);
+}
+@media (max-width: 50em) {
+	.attribution > p {
+		bottom: 2.5rem;
+		transform: rotateY(0);
+	}
+}
